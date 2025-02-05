@@ -15,13 +15,11 @@ export class DeepSeekR1SageMakerStack extends cdk.Stack {
       modelName
     });
 
-    // Export the SageMaker endpoint name
     new cdk.CfnOutput(this, "SageMakerEndpointName", {
       value: sagemakerConstruct.sagemakerEndpointName,
       description: "The name of the deployed SageMaker endpoint"
     });
 
-    // Export the AWS region
     new cdk.CfnOutput(this, "AWSRegion", {
       value: this.region,
       description: "AWS region where the SageMaker endpoint is deployed"

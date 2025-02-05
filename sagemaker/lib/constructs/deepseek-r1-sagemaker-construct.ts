@@ -20,10 +20,19 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
 
         const sagemakerRole = new iam.Role(this, "SageMakerExecutionRole", {
             assumedBy: new iam.ServicePrincipal("sagemaker.amazonaws.com"),
-            managedPolicies: [
-                iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSageMakerFullAccess")
-            ]
         });
+
+        sagemakerRole.addToPolicy(new iam.PolicyStatement({
+            actions: [
+                "sagemaker:CreateEndpoint",
+                "sagemaker:UpdateEndpoint",
+                "sagemaker:InvokeEndpoint",
+                "sagemaker:DescribeEndpoint",
+                "sagemaker:ListModels"
+            ],
+            resources: [`arn:aws:sagemaker:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:endpoint/*`]
+        }));
+
 
         const gpuMapping: { [key: number]: string[] } = {
             4: ["ml.g5.12xlarge", "ml.g6e.24xlarge", "ml.g6e.12xlarge", "ml.g6.12xlarge", "ml.g6.24xlarge", "ml.g4dn.12xlarge", "ml.g4ad.16xlarge"],
@@ -46,8 +55,8 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
         const model = new sagemaker.CfnModel(this, "DeepSeekR1Model", {
             executionRoleArn: sagemakerRole.roleArn,
             primaryContainer: {
-                Image: inferenceImageUri,
-                Environment: {
+                image: inferenceImageUri,
+                environment: {
                     "HF_MODEL_ID": hfModelId,
                     "OPTION_MAX_MODEL_LEN": "10000",
                     "OPTION_GPU_MEMORY_UTILIZATION": "0.95",
@@ -67,10 +76,11 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
 
         const endpointConfig = new sagemaker.CfnEndpointConfig(this, "DeepSeekR1EndpointConfig", {
             productionVariants: [{
-                ModelName: model.attrModelName,
-                InstanceType: props.instanceType,
-                InitialInstanceCount: 1,
-                ContainerStartupHealthCheckTimeoutInSeconds: 600
+                variantName: "AllTraffic",
+                modelName: model.attrModelName,
+                instanceType: props.instanceType,
+                initialInstanceCount: 1,
+                containerStartupHealthCheckTimeoutInSeconds: 600
             }]
         });
 
