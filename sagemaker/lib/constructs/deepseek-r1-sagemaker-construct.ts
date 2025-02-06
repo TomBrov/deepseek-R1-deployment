@@ -11,6 +11,7 @@ export interface DeepSeekR1SageMakerProps {
 
 export class DeepSeekR1SageMakerConstruct extends Construct {
     public sagemakerEndpointName: string;
+
     constructor(scope: Construct, id: string, props: DeepSeekR1SageMakerProps) {
         super(scope, id);
 
@@ -50,7 +51,6 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
         }
 
         const hfModelId = `deepseek-ai/${props.modelName}`;
-        console.log(`Deploying model: ${hfModelId}`);
 
         const model = new sagemaker.CfnModel(this, "DeepSeekR1Model", {
             executionRoleArn: sagemakerRole.roleArn,
@@ -71,7 +71,6 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
                 }
             },
             modelName: props.modelName
-
         });
 
         const endpointConfig = new sagemaker.CfnEndpointConfig(this, "DeepSeekR1EndpointConfig", {
