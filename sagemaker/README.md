@@ -9,26 +9,6 @@ This module provides an **AWS CDK (TypeScript) solution** to deploy **DeepSeek R
 - ✅ **Fully Automated Deployment** – Uses **AWS CDK** for infrastructure provisioning.
 - ✅ **Easy Model Invocation** – Test the endpoint using **AWS SDK (Boto3) or AWS CLI**.
 
-## 📂 Project Structure
-```
-deepseek-r1-sagemaker-cdk/
-│── bin/
-│   ├── deepseek-r1-sagemaker.ts  # CDK entry point
-│
-│── lib/
-│   ├── constructs/
-│   │   ├── deepseek-r1-sagemaker-construct.ts  # Deploys SageMaker Model & Endpoint
-│   │
-│   ├── deepseek-r1-sagemaker-stack.ts  # Main CDK stack
-│
-│── test/
-│   ├── sagemaker-endpoint-test.py  # Python script to test the endpoint
-│
-│── cdk.json  # Stores context values for model, instance, container
-│── package.json  # Dependencies
-│── README.md  # Documentation
-```
-
 ## 🛠️ Installation
 ### **1️⃣ Install AWS CDK & Dependencies**
 ```sh
