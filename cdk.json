@@ -1,0 +1,8 @@
+{
+  "app": "npx ts-node --prefer-ts-exts bin/deepseek-r1-sagemaker.ts",
+  "context": {
+    "containerType": "tgi",
+    "instanceType": "ml.g5.2xlarge",
+    "modelName": "Qwen-7B"
+  }
+}

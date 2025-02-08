@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as sagemaker from 'aws-cdk-lib/aws-sagemaker';
-import * as iam from 'aws-cdk-lib/aws-iam';
+import { SageMakerIamRoleConstruct } from './deepseek-r1-sagemaker-role-construct';
 import { Construct } from 'constructs';
 
 export interface DeepSeekR1SageMakerProps {
@@ -10,30 +10,22 @@ export interface DeepSeekR1SageMakerProps {
 }
 
 export class DeepSeekR1SageMakerConstruct extends Construct {
-    public sagemakerEndpointName: string;
+    public readonly sagemakerEndpointName: string;
 
     constructor(scope: Construct, id: string, props: DeepSeekR1SageMakerProps) {
         super(scope, id);
 
+        const ecrRepository = props.containerType === "tgi"
+            ? "huggingface-pytorch-tgi-inference"
+            : "djl-inference";
+
         const inferenceImageUri = props.containerType === "tgi"
-            ? "763104351884.dkr.ecr.us-east-1.amazonaws.com/huggingface-pytorch-tgi-inference:2.4.0-tgi3.0.1-gpu-py311-cu124-ubuntu22.04"
-            : "763104351884.dkr.ecr.us-east-1.amazonaws.com/djl-inference:0.31.0-lmi13.0.0-cu124";
+            ? `763104351884.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com/${ecrRepository}:2.4.0-tgi2.3.1-gpu-py311-cu124-ubuntu22.04`
+            : `763104351884.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com/${ecrRepository}:0.31.0-lmi13.0.0-cu124`;
 
-        const sagemakerRole = new iam.Role(this, "SageMakerExecutionRole", {
-            assumedBy: new iam.ServicePrincipal("sagemaker.amazonaws.com"),
+        const sagemakerRole = new SageMakerIamRoleConstruct(this, "SageMakerRole", {
+            ecrRepository
         });
-
-        sagemakerRole.addToPolicy(new iam.PolicyStatement({
-            actions: [
-                "sagemaker:CreateEndpoint",
-                "sagemaker:UpdateEndpoint",
-                "sagemaker:InvokeEndpoint",
-                "sagemaker:DescribeEndpoint",
-                "sagemaker:ListModels"
-            ],
-            resources: [`arn:aws:sagemaker:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:endpoint/*`]
-        }));
-
 
         const gpuMapping: { [key: number]: string[] } = {
             4: ["ml.g5.12xlarge", "ml.g6e.24xlarge", "ml.g6e.12xlarge", "ml.g6.12xlarge", "ml.g6.24xlarge", "ml.g4dn.12xlarge", "ml.g4ad.16xlarge"],
@@ -50,7 +42,7 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
             }
         }
 
-        const hfModelId = `deepseek-ai/${props.modelName}`;
+        const hfModelId = `deepseek-ai/DeepSeek-R1-Distill-${props.modelName}-inference`;
 
         const model = new sagemaker.CfnModel(this, "DeepSeekR1Model", {
             executionRoleArn: sagemakerRole.roleArn,
@@ -72,6 +64,7 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
             },
             modelName: props.modelName
         });
+        model.node.addDependency(sagemakerRole);
 
         const endpointConfig = new sagemaker.CfnEndpointConfig(this, "DeepSeekR1EndpointConfig", {
             productionVariants: [{
@@ -82,10 +75,12 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
                 containerStartupHealthCheckTimeoutInSeconds: 600
             }]
         });
+        endpointConfig.node.addDependency(model);
 
         const sagemakerEndpoint = new sagemaker.CfnEndpoint(this, "DeepSeekR1Endpoint", {
             endpointConfigName: endpointConfig.attrEndpointConfigName
         });
+        sagemakerEndpoint.node.addDependency(endpointConfig);
         
         this.sagemakerEndpointName = sagemakerEndpoint.endpointConfigName;
     }
