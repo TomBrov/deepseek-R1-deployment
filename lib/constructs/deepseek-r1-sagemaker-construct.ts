@@ -2,7 +2,6 @@ import * as cdk from 'aws-cdk-lib';
 import * as sagemaker from 'aws-cdk-lib/aws-sagemaker';
 import { SageMakerIamRoleConstruct } from './deepseek-r1-sagemaker-role-construct';
 import { Construct } from 'constructs';
-import * as logs from 'aws-cdk-lib/aws-logs';
 
 export interface DeepSeekR1SageMakerProps {
     containerType: string;
