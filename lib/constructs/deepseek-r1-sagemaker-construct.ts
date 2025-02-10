@@ -42,7 +42,7 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
             }
         }
 
-        const hfModelId = `deepseek-ai/DeepSeek-R1-Distill-${props.modelName}-inference`;
+        const hfModelId = `deepseek-ai/DeepSeek-R1-Distill-${props.modelName}`;
 
         const model = new sagemaker.CfnModel(this, "DeepSeekR1Model", {
             executionRoleArn: sagemakerRole.roleArn,
@@ -81,7 +81,7 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
             endpointConfigName: endpointConfig.attrEndpointConfigName
         });
         sagemakerEndpoint.node.addDependency(endpointConfig);
-        
-        this.sagemakerEndpointName = sagemakerEndpoint.endpointConfigName;
+
+        this.sagemakerEndpointName = sagemakerEndpoint.attrEndpointName;
     }
 }
