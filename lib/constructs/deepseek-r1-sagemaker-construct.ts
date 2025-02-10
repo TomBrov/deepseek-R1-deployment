@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as sagemaker from 'aws-cdk-lib/aws-sagemaker';
 import { SageMakerIamRoleConstruct } from './deepseek-r1-sagemaker-role-construct';
 import { Construct } from 'constructs';
+import * as logs from 'aws-cdk-lib/aws-logs';
 
 export interface DeepSeekR1SageMakerProps {
     containerType: string;
@@ -20,8 +21,8 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
             : "djl-inference";
 
         const inferenceImageUri = props.containerType === "tgi"
-            ? `763104351884.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com/${ecrRepository}:2.4.0-tgi2.3.1-gpu-py311-cu124-ubuntu22.04`
-            : `763104351884.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com/${ecrRepository}:0.31.0-lmi13.0.0-cu124`;
+            ? `763104351884.dkr.ecr.us-east-1.amazonaws.com/${ecrRepository}:2.4.0-tgi2.3.1-gpu-py311-cu124-ubuntu22.04`
+            : `763104351884.dkr.ecr.us-east-1.amazonaws.com/${ecrRepository}:0.31.0-lmi13.0.0-cu124`;
 
         const sagemakerRole = new SageMakerIamRoleConstruct(this, "SageMakerRole", {
             ecrRepository
@@ -59,7 +60,7 @@ export class DeepSeekR1SageMakerConstruct extends Construct {
                     "OPTION_DTYPE": "fp16",
                     "MAX_CONCURRENT_REQUESTS": "10",
                     "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
-                    "SM_NUM_GPUS": JSON.stringify(numberOfGpu),
+                    "SM_NUM_GPUS": JSON.stringify(numberOfGpu)
                 }
             },
             modelName: props.modelName
