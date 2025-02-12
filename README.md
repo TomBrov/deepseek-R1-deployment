@@ -29,13 +29,11 @@ cdk deploy -c containerType=tgi -c instanceType=ml.g5.2xlarge -c modelName=Qwen-
 ```
 
 ## 🎯 Testing the SageMaker Endpoint
-### **Using AWS CLI**
 ```sh
-aws sagemaker-runtime invoke-endpoint \
-    --endpoint-name deepseek-r1-distill-qwen-7b-ep \
-    --content-type "application/json" \
-    --body '{"inputs": "Hello, AI!"}' \
-    output.json && cat output.json
+python3 -m venv venv
+source venv/bin/activate
+pip install -r test/requirements.txt
+python3 test/invoke_sagemaker.py
 ```
 
 ## 📜 Supported Models
