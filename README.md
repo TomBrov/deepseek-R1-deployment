@@ -29,11 +29,19 @@ cdk deploy -c containerType=tgi -c instanceType=ml.g5.2xlarge -c modelName=Qwen-
 ```
 
 ## 🎯 Testing the SageMaker Endpoint
+
+### How to test the Endpoint and Model?
 ```sh
 python3 -m venv venv
 source venv/bin/activate
 pip install -r test/requirements.txt
 python3 test/invoke_sagemaker.py
+```
+
+### Sample Output
+```shell
+📝 Testing SageMaker Endpoint: DeepSeekR1SageMakerConstructDeepSeekR1EndpointA3CF-A2OD7LAwiYSG in region us-east-1...
+✅ Response: [{'generated_text': 'What is the meaning of life? (In English, please.)\n\nThe meaning of life is a profound and age-old question that has puzzled humans for centuries. There are numerous theories and perspectives that attempt to answer this question, ranging from philosophical and theological ideas to scientific and practical approaches. Here are some common approaches and perspectives on the meaning of life:\n\n1. **Philosophical Approaches**:\n   - **Existentialism**: Focuses on the search for meaning within the context of human existence and personal freedom. According to existentialists'}]
 ```
 
 ## 📜 Supported Models
@@ -45,3 +53,4 @@ python3 test/invoke_sagemaker.py
 | Qwen-32B   | DeepSeek-R1-Distill-Qwen-32B               | ml.g6.12xlarge            | 4              |
 | Llama-8B   | DeepSeek-R1-Distill-Llama-8B               | ml.g5.2xlarge             | 1              |
 | Llama-70B  | DeepSeek-R1-Distill-Llama-70B              | ml.g6.48xlarge            | 8              |
+
