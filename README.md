@@ -1,6 +1,6 @@
 # 🚀 Deploy DeepSeek R1 on Amazon SageMaker with AWS CDK
 
-This module provides an **AWS CDK (TypeScript) solution** to deploy **DeepSeek R1 models** on **Amazon SageMaker** using **Hugging Face TGI (Text Generation Inference) or AWS LMI (Large Model Inference) containers**.
+This module provides an AWS CDK (TypeScript) solution to deploy DeepSeek R1 models on Amazon SageMaker using Hugging Face TGI (Text Generation Inference) or AWS LMI (Large Model Inference) containers.
 
 ## 📌 Features
 - ✅ **Dynamic Model Selection** – Choose from supported **DeepSeek R1 models**.
