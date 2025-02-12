@@ -37,11 +37,11 @@ python3 test/invoke_sagemaker.py
 ```
 
 ## 📜 Supported Models
-| Short Name  | Full Model Name  |
-|-------------|------------------|
-| Qwen-1.5B  | DeepSeek-R1-Distill-Qwen-1.5B  |
-| Qwen-7B    | DeepSeek-R1-Distill-Qwen-7B    |
-| Llama-8B   | DeepSeek-R1-Distill-Llama-8B   |
-| Qwen-14B   | DeepSeek-R1-Distill-Qwen-14B   |
-| Qwen-32B   | DeepSeek-R1-Distill-Qwen-32B   |
-| Llama-70B  | DeepSeek-R1-Distill-Llama-70B  |
+| Short Name | Full Model Name                            | Recommended Instance Type | Number of GPUs |
+|------------|--------------------------------------------|---------------------------|----------------|
+| Qwen-1.5B  | DeepSeek-R1-Distill-Qwen-1.5B              | ml.g5.4xlarge             | 1              |
+| Qwen-7B    | DeepSeek-R1-Distill-Qwen-7B                | ml.g5.4xlarge             | 1              |
+| Qwen-14B   | DeepSeek-R1-Distill-Qwen-14B               | ml.g5.12xlarge            | 4              |
+| Qwen-32B   | DeepSeek-R1-Distill-Qwen-32B               | ml.g6.12xlarge            | 4              |
+| Llama-8B   | DeepSeek-R1-Distill-Llama-8B               | ml.g5.2xlarge             | 1              |
+| Llama-70B  | DeepSeek-R1-Distill-Llama-70B              | ml.g6.48xlarge            | 8              |
